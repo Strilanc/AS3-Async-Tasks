@@ -45,6 +45,16 @@ package Async {
 			if (ct != null) ct.OnCancelled(r.TrySetCancelled);
 			return r;
 		}
+		/// A task that faults when the given object raises the given event.
+		/// The task's fault is the event argument.
+		/// If a cancel token is given and is cancelled before the event fires, the task cancels.
+		public static function ListenForErrorEvent(obj : Object, event : String, ct : CancelToken = null) : Task {
+			var r : TaskSource = new TaskSource();
+			obj.addEventListener(event, r.TrySetFault);
+			r.Await(function():void { obj.removeEventListener(event, r.TrySetFault); } );
+			if (ct != null) ct.OnCancelled(r.TrySetCancelled);
+			return r;
+		}
 		/// A task that completes when the given object raises a given event matching the given condition.
 		/// The task's result is the matching event argument.
 		/// If a cancel token is given and is cancelled before the event fires, the task cancels.
@@ -72,7 +82,7 @@ package Async {
 			var tasks:Vector.<Task> = new Vector.<Task>();
 			tasks.push(ListenForEvent(obj, successEvent, cleanupToken));
 			for each (var ev : String in errorEvents)
-				tasks.push(ListenForEvent(obj, ev, cleanupToken));
+				tasks.push(ListenForErrorEvent(obj, ev, cleanupToken));
 				
 			var r:Task = TaskEx.AwaitAny(tasks);
 			if (ct != null) ct.OnCancelled(cleanupToken.Cancel);
@@ -163,8 +173,8 @@ package Async {
 		/// Starts playing the given sound, returning a Task<void> for when it completes.
 		/// Playback can be stopped by canceling the given cancel token.
 		public static function PlaySound(sound : Sound, ct : CancelToken = null) : Task {
-			var channel:SoundChannel = sound.play();
 			var r:Task = ListenForEvent(channel, Event.SOUND_COMPLETE, ct);
+			var channel:SoundChannel = sound.play();
 			if (ct != null) { ct.OnCancelled(channel.stop); }
 			return r;
 		}
@@ -173,11 +183,12 @@ package Async {
 		/// Loading can be stopped by canceling the given cancel token.
 		public static function LoadSound(url : String, ct : CancelToken = null) : Task {
 			var sound:Sound = new Sound();
-			sound.load(new URLRequest(url));
-			if (ct != null) { ct.OnCancelled(sound.close); }
-			return ListenForEventOrErrorEvents(sound, Event.COMPLETE, new Array(IOErrorEvent.IO_ERROR), ct).ContinueWith(function():Sound {
+			var r:Task = ListenForEventOrErrorEvents(sound, Event.COMPLETE, new Array(IOErrorEvent.IO_ERROR), ct).ContinueWith(function():Sound {
 				return sound;
 			});
+			sound.load(new URLRequest(url));
+			if (ct != null) { ct.OnCancelled(sound.close); }
+			return r;
 		}
 	}
 }

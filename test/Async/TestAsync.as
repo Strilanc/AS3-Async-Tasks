@@ -45,15 +45,15 @@ package Async {
 			assertEquals(TaskEx.Wrap(null).IsCompleted(), true);
 			assertEquals(TaskEx.Wrap(null).Result(), null);
 			assertEquals(TaskEx.Wrap(5).Result(), 5);
-			assertEquals(TaskEx.Wrap(6, false).IsCompleted(), false);
-			assertTaskWillBe(TaskEx.Wrap(6, false), 6);
+			assertEquals(TaskEx.Wrap(6, true).IsCompleted(), false);
+			assertTaskWillBe(TaskEx.Wrap(6, true), 6);
 		}
 		public function testWrapFault() : void {
-			assertEquals(TaskEx.WrapFault(null, true).IsFaulted(), true);
-			assertEquals(TaskEx.WrapFault(null, false).IsFaulted(), false);
-			assertTaskWillFault(TaskEx.WrapFault(null, false));
-			assertEquals(TaskEx.WrapFault(null, true).Fault(), null);
-			assertEquals(TaskEx.WrapFault(5, true).Fault(), 5);
+			assertEquals(TaskEx.WrapFault(null, true).IsFaulted(), false);
+			assertEquals(TaskEx.WrapFault(null, false).IsFaulted(), true);
+			assertTaskWillFault(TaskEx.WrapFault(null, true));
+			assertEquals(TaskEx.WrapFault(null, false).Fault(), null);
+			assertEquals(TaskEx.WrapFault(5, false).Fault(), 5);
 		}
 		public function testDefer() : void {
 			assertEquals(TaskInterop.Defer().IsCompleted(), false);
