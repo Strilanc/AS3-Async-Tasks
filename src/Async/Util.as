@@ -18,7 +18,7 @@ package Async {
     import flash.system.LoaderContext;
 	
 	internal class Util {
-		public static function addOneTimeEventHandlerTo(obj : Object, event : String, callback : Function) : void {
+		public static function AddOneTimeEventHandlerTo(obj : Object, event : String, callback : Function) : void {
 			var f : Function = function(arg : Object) : void {
 				obj.removeEventListener(event, f);
 				callback(arg);
@@ -33,7 +33,7 @@ package Async {
 		public static function Delay(delayMilliseconds : Number, callback : Function):void {
 			var t:Timer = new Timer(delayMilliseconds, 1);
 			t.start();
-			Util.addOneTimeEventHandlerTo(t, TimerEvent.TIMER_COMPLETE, function(e:TimerEvent):void { callback(); });
+			Util.AddOneTimeEventHandlerTo(t, TimerEvent.TIMER_COMPLETE, function(e:TimerEvent):void { callback(); });
 		}
 	}
 }

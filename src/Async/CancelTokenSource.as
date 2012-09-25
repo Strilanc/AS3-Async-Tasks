@@ -9,6 +9,7 @@ package Async {
 			return _cancelled;
 		}
 		
+		/// Cancels the token.
 		public function Cancel():void {
 			if (_cancelled) return;
 			_cancelled = true;

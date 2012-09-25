@@ -1,9 +1,10 @@
 package Async {
+	/// An error that is actually multiple errors
 	public class AggregateError extends Error {
 		public var Causes:Array;
 		public function AggregateError(causes:Array) {
 			super("AggregateError: " + Summarize(causes));
-			this.Causes = Linq.Distinct(causes);
+			this.Causes = causes;
 		}
 		public function Collapse() : Object {
 			if (Causes.length != 1) return this;

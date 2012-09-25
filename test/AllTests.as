@@ -7,7 +7,6 @@ package {
 	import Async.TaskEx;
 	import Async.TaskInterop;
 	import Async.TestAsync;
-	import Async.TestLinq;
 	import flash.display.Stage;
 	import flash.errors.IllegalOperationError;
 
@@ -16,7 +15,6 @@ package {
 		public function AllTests() {
 			super();
 			addTest(new TestAsync());
-			addTest(new TestLinq());
 			HACKY_LAST_INSTANCE = this;
 		}
 		public static function RunShowAsync(stage : Stage) :Task {

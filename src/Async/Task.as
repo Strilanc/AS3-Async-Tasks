@@ -1,5 +1,6 @@
 package Async {
 	import flash.errors.IllegalOperationError;
+	/// Represents a result that will be available in the future.
 	public interface Task {
 		/// Determines if the task has completed successfully.
 		function IsCompleted() : Boolean;
