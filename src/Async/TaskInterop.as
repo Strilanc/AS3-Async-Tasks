@@ -173,8 +173,8 @@ package Async {
 		/// Starts playing the given sound, returning a Task<void> for when it completes.
 		/// Playback can be stopped by canceling the given cancel token.
 		public static function PlaySound(sound : Sound, ct : CancelToken = null) : Task {
-			var r:Task = ListenForEvent(channel, Event.SOUND_COMPLETE, ct);
 			var channel:SoundChannel = sound.play();
+			var r:Task = ListenForEvent(channel, Event.SOUND_COMPLETE, ct);
 			if (ct != null) { ct.OnCancelled(channel.stop); }
 			return r;
 		}
